@@ -2,33 +2,37 @@ version: "3.8"
 
 services:
   paymybuddy-backend:
-#    build:
- #     context: .
+  #  build:
+  #    context: .
   #    dockerfile: Dockerfile
     image: devops.mediker.fr:8098/paymybuddy-backend
     container_name: backend
     restart: unless-stopped
     ports:
-      - "8080:8080" 
+      - "8080:8080"
     depends_on:
       paymybuddy-db:
         condition: service_healthy
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://paymybuddy-db:3306/db_paymybuddy
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+    secrets:
+      - env
     networks:
-      - paymybuddy_network  
+      - paymybuddy_network
 
   paymybuddy-db:
     image: devops.mediker.fr:8098/paymybuddy-db
     container_name: database
     restart: always
     environment:
-      MYSQL_DATABASE: 'db'
-      MYSQL_USER: 'user'
-      MYSQL_PASSWORD: 'password'
-      MYSQL_ROOT_PASSWORD: 'password'
+    #  MYSQL_DATABASE: 'db'
+    #  MYSQL_USER: 'user'
+    #  MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: /run/secrets/env
+    secrets:
+      - env
     ports:
       - '3306:3306'
     healthcheck:
@@ -48,3 +52,7 @@ networks:
 
 volumes:
   my-db:
+
+secrets:
+  env:
+    file: ./.env
