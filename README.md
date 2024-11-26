@@ -108,9 +108,12 @@ ENTRYPOINT ["java","-jar","paymybuddy.jar"]
 
 ```
 
+ ![Screenshot 2024-11-26 183126](https://github.com/user-attachments/assets/750ad0ae-5356-4df8-a6aa-ef42deaa27f8)
+![Screenshot 2024-11-26 193059](https://github.com/user-attachments/assets/54f76b1c-22ad-4bee-92e9-80384c15a01e)
 
-## Private Registry 
-yyy
+
+
+ 
 
 ## Private Registry 
 - As I'm using a remote machine with http, I'll edit the `/etc/docker/daemon.json` file. Don't use this on prod or in the real registries, you can use certificates.
