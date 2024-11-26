@@ -104,8 +104,65 @@ ENTRYPOINT ["java","-jar","paymybuddy.jar"]
 ```
 
 - Docker-compsoe 
-```yml 
+```yml
+version: "3.8"
 
+services:
+  paymybuddy-backend:
+  #  build:
+  #    context: .
+  #    dockerfile: Dockerfile
+    image: devops.mediker.fr:8098/paymybuddy-backend
+    container_name: backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      paymybuddy-db:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://paymybuddy-db:3306/db_paymybuddy
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+    secrets:
+      - env
+    networks:
+      - paymybuddy_network
+
+  paymybuddy-db:
+    image: devops.mediker.fr:8098/paymybuddy-db
+    container_name: database
+    restart: always
+    environment:
+    #  MYSQL_DATABASE: 'db'
+    #  MYSQL_USER: 'user'
+    #  MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: /run/secrets/env
+    secrets:
+      - env
+    ports:
+      - '3306:3306'
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      retries: 10
+      interval: 3s
+      timeout: 30s
+    volumes:
+      - ./initdb/create.sql:/docker-entrypoint-initdb.d/create.sql:ro
+      - my-db:/var/lib/mysql
+    networks:
+      - paymybuddy_network
+
+networks:
+  paymybuddy_network:
+    driver: bridge
+
+volumes:
+  my-db:
+
+secrets:
+  env:
+    file: ./.env
 ```
 
  ![Screenshot 2024-11-26 183126](https://github.com/user-attachments/assets/750ad0ae-5356-4df8-a6aa-ef42deaa27f8)
