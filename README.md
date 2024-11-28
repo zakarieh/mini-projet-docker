@@ -29,16 +29,15 @@ Vagrant.configure("2") do |config|
     ubuntu.vm.network "forwarded_port", guest: 3306, host: 3306
 
     # Forwarded port for private registry
-    docker.vm.network "forwarded_port", guest: 8081, host: 8081
-    docker.vm.network "forwarded_port", guest: 8088, host: 8088
+    docker.vm.network "forwarded_port", guest: 8081, host: 8091
+    docker.vm.network "forwarded_port", guest: 8088, host: 8098
 
     ubuntu.vm.hostname = "ubuntu"
     ubuntu.vm.provider "virtualbox" do |v|
       v.name = "ubuntu"
       v.memory = 1024
       v.cpus = 2
-    end![1](https://github.com/user-attachments/assets/932428cd-368d-4b1e-a1af-a6604f69124d)
-
+    end
   end
 end
 ```
