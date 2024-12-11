@@ -24,13 +24,13 @@ Vagrant.configure("2") do |config|
   config.vm.define "ubuntu" do |ubuntu|
     ubuntu.vm.box = "ubuntu/focal64"
     ubuntu.vm.box_version = "20240821.0.1"
+
     # Forwarded port for PayMyBuddy app
     ubuntu.vm.network "forwarded_port", guest: 8080, host: 8090
     ubuntu.vm.network "forwarded_port", guest: 3306, host: 3306
-
     # Forwarded port for private registry
-    docker.vm.network "forwarded_port", guest: 8081, host: 8091
-    docker.vm.network "forwarded_port", guest: 8088, host: 8098
+    ubuntu.vm.network "forwarded_port", guest: 8081, host: 8091
+    ubuntu.vm.network "forwarded_port", guest: 8088, host: 8098
 
     ubuntu.vm.hostname = "ubuntu"
     ubuntu.vm.provider "virtualbox" do |v|
